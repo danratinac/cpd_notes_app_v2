@@ -327,7 +327,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
                       },
                       icon: const Icon(Icons.delete_outline),
                       iconSize: 30.0,
-                      color: theme.colorScheme.primary,
+                      color: Colors.red,
                       tooltip: 'Delete Note',
                     ),
                     IconButton(
@@ -635,13 +635,19 @@ class DeleteAlert extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context, false);
           },
-          child: const Text('No'),
+          child: const Text('Cancel'),
         ),
         TextButton(
           onPressed: () {
             Navigator.pop(context, true);
           },
-          child: const Text('Yes'),
+          child: const Text(
+            'Delete',
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ],
     );
