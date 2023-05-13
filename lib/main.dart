@@ -404,9 +404,12 @@ class LabelPage extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
-          child: Text(
-            '$title Notes',
-            style: titleTheme,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Text(
+              '$title Notes',
+              style: titleTheme,
+            ),
           ),
         ),
         Expanded(
