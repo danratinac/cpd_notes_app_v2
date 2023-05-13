@@ -135,7 +135,7 @@ class HomeScreen extends StatelessWidget {
             child: LabelsAppBar(),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             appState.changeCurrentLabel(0);
             Navigator.push(
@@ -145,7 +145,8 @@ class HomeScreen extends StatelessWidget {
           },
           backgroundColor: theme.colorScheme.primary,
           tooltip: 'Add Note',
-          child: const Icon(Icons.note_add_outlined),
+          label: const Text('Add Note'),
+          icon: const Icon(Icons.note_add_outlined),
         ),
       ),
     );
