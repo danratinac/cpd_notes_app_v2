@@ -217,6 +217,7 @@ class _NewNoteScreenState extends State<NewNoteScreen> {
                 Expanded(
                   child: TextField(
                     controller: noteController,
+                    autofocus: true,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     decoration: const InputDecoration(
