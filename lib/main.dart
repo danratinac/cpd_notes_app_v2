@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const NewNoteScreen()),
-          );
+          ).then((value) => tabCont.animateTo(appState.currentLabel));
         },
         backgroundColor: theme.colorScheme.primary,
         tooltip: 'Add Note',
