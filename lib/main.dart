@@ -101,8 +101,35 @@ class NoteData {
   NoteData(this.title, this.text);
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  int currentLabel = 0;
+  late TabController tabCont;
+
+  @override
+  void initState() {
+    super.initState();
+
+    tabCont = TabController(length: 7, vsync: this);
+
+    tabCont.animation!.addListener(() {
+      if (currentLabel != tabCont.animation!.value.round()) {
+        currentLabel = tabCont.animation!.value.round();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    tabCont.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,40 +141,40 @@ class HomeScreen extends StatelessWidget {
 
     var appState = context.watch<AppState>();
 
-    return DefaultTabController(
-      length: 7,
-      child: Scaffold(
-        backgroundColor: theme.colorScheme.primaryContainer,
-        body: SafeArea(
-          child: TabBarView(
-            children: appState.labels
-                .map((e) => LabelPage(
-                      titleTheme: titleTheme,
-                      title: e,
-                      labelIndex: appState.labels.indexOf(e),
-                    ))
-                .toList(),
+    return Scaffold(
+      backgroundColor: theme.colorScheme.primaryContainer,
+      body: SafeArea(
+        child: TabBarView(
+          controller: tabCont,
+          children: appState.labels
+              .map((e) => LabelPage(
+                    titleTheme: titleTheme,
+                    title: e,
+                    labelIndex: appState.labels.indexOf(e),
+                  ))
+              .toList(),
+        ),
+      ),
+      bottomNavigationBar: ColoredBox(
+        color: theme.colorScheme.primary,
+        child: SafeArea(
+          child: LabelsAppBar(
+            controller: tabCont,
           ),
         ),
-        bottomNavigationBar: ColoredBox(
-          color: theme.colorScheme.primary,
-          child: const SafeArea(
-            child: LabelsAppBar(),
-          ),
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            appState.changeCurrentLabel(0);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const NewNoteScreen()),
-            );
-          },
-          backgroundColor: theme.colorScheme.primary,
-          tooltip: 'Add Note',
-          label: const Text('Add Note'),
-          icon: const Icon(Icons.note_add_outlined),
-        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          appState.changeCurrentLabel(currentLabel);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const NewNoteScreen()),
+          );
+        },
+        backgroundColor: theme.colorScheme.primary,
+        tooltip: 'Add Note',
+        label: const Text('Add Note'),
+        icon: const Icon(Icons.note_add_outlined),
       ),
     );
   }
@@ -182,6 +209,7 @@ class _NewNoteScreenState extends State<NewNoteScreen> {
     var appState = context.watch<AppState>();
 
     return DefaultTabController(
+      initialIndex: appState.currentLabel,
       length: 7,
       child: Scaffold(
         body: SafeArea(
@@ -431,7 +459,9 @@ class LabelPage extends StatelessWidget {
 }
 
 class LabelsAppBar extends StatelessWidget {
-  const LabelsAppBar({super.key});
+  const LabelsAppBar({super.key, required this.controller});
+
+  final TabController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -441,6 +471,7 @@ class LabelsAppBar extends StatelessWidget {
     return ColoredBox(
       color: theme.colorScheme.primary,
       child: TabBar(
+        controller: controller,
         isScrollable: true,
         indicatorColor: theme.colorScheme.onPrimary,
         labelColor: theme.colorScheme.onPrimary,
